@@ -1,0 +1,12 @@
+Source: ros-hydro-strands-qsr-lib
+Section: misc
+Priority: extra
+Maintainer: Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>
+Build-Depends: debhelper (>= 9.0.0), ros-hydro-catkin
+Homepage: https://github.com/strands-project/strands_qsr_lib
+Standards-Version: 3.9.2
+
+Package: ros-hydro-strands-qsr-lib
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-hydro-qsr-lib
+Description: The strands_qsr_lib metapackage
