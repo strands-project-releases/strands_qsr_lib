@@ -1,0 +1,25 @@
+ros-hydro-strands-qsr-lib (0.0.3-0precise) precise; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Tue, 27 Jan 2015 00:00:00 -0000
+
+ros-hydro-strands-qsr-lib (0.0.2-0precise) precise; urgency=high
+
+  * Created changelog
+  * Adding meta package for future extension.
+    Meta package will be added to strands-desktop and strands-robot for convenience.
+  * Contributors: Christian Dondrup
+  * Adding meta package for future extension.
+    Meta package will be added to strands-desktop and strands-robot for convenience.
+  * Contributors: Christian Dondrup
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Tue, 27 Jan 2015 00:00:00 -0000
+
+ros-hydro-strands-qsr-lib (0.0.1-0precise) precise; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Tue, 27 Jan 2015 00:00:00 -0000
+
+
