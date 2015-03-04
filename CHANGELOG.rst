@@ -2,6 +2,9 @@
 Changelog for package strands_qsr_lib
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.6 (2015-03-04)
+------------------
+
 0.0.5 (2015-02-27)
 ------------------
 * There was a tag with a higher version number. Adjusting numbers to release for necessary bug fixes in the ROS client.
