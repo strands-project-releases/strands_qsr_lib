@@ -7,13 +7,28 @@
 
 from __future__ import print_function, division
 import numpy as np
+import ConfigParser
 from qsr_arg_relations_abstractclass import QSR_Arg_Relations_Abstractclass
 from qsrlib_io.world_qsr_trace import *
 
 class QSR_Arg_Relations_Distance(QSR_Arg_Relations_Abstractclass):
-    def __init__(self):
+    def __init__(self, ini=None):
         super(QSR_Arg_Relations_Distance, self).__init__()
         self.qsr_type = "arg_relations_distance"
+        self.qsr_keys = "argd"
+        if ini:
+            self.set_from_ini(ini=ini)
+
+    def custom_set_from_ini(self, parser):
+        try:
+            relations_and_values = parser.get(self.qsr_type, "relations_and_values")
+        except ConfigParser.NoSectionError, ConfigParser.NoOptionError:
+            raise
+        try:
+            relations_and_values = eval(relations_and_values)
+        except:
+            raise ValueError
+        self.set_qsr_relations_and_values(qsr_relations_and_values=relations_and_values)
 
     def custom_help(self):
         """Write your own help message function"""
@@ -49,10 +64,31 @@ class QSR_Arg_Relations_Distance(QSR_Arg_Relations_Abstractclass):
                         - input_data: World_Trace
         :return: World_QSR_Trace
         """
-        if kwargs["qsr_relations_and_values"]:
-            self.set_qsr_relations_and_values(qsr_relations_and_values=kwargs["qsr_relations_and_values"])
-        if self.qsr_relations_and_values is None:
-            raise ValueError("qsr_relations_and_values is uninitialized")
+        # optional set from ini
+        try:
+            if kwargs["ini"]:
+                self.set_from_ini(kwargs["ini"])
+        except:
+            pass
+        # optional direct set, deprecated way
+        try:
+            if kwargs["qsr_relations_and_values"]:
+                print("Warning: This feature is deprecated, use dynamic_args on your request message instead")
+                self.set_qsr_relations_and_values(qsr_relations_and_values=kwargs["qsr_relations_and_values"])
+        except:
+            pass
+        # optional direct set
+        try:
+            if kwargs["dynamic_args"]["qsr_relations_and_values"]:
+                # print(">> dynamic args")  # dbg
+                self.set_qsr_relations_and_values(qsr_relations_and_values=kwargs["dynamic_args"]["qsr_relations_and_values"])
+        except:
+            pass
+        # print(self.qsr_relations_and_values)  # dbg
+        if not self.qsr_relations_and_values:
+            raise ValueError("qsr_relations_and_values is uninitialized,"
+                             "use dynamic_args={'qsr_relations_and_values': <your dictionary of relations and values>"
+                             "in the QSRlib_Request_Message")
         input_data = kwargs["input_data"]
         include_missing_data = kwargs["include_missing_data"]
         ret = World_QSR_Trace(qsr_type=self.qsr_type)
@@ -68,14 +104,15 @@ class QSR_Arg_Relations_Distance(QSR_Arg_Relations_Abstractclass):
                 for p in qsrs_for:
                     between = str(p[0]) + "," + str(p[1])
                     objs = (world_state.objects[p[0]], world_state.objects[p[1]])
-                    qsr = QSR(timestamp=timestamp, between=between, qsr=self.compute_qsr(objs))
+                    qsr = QSR(timestamp=timestamp, between=between,
+                              qsr=self.handle_future(kwargs["future"], self.__compute_qsr(objs), self.qsr_keys))
                     ret.add_qsr(qsr, timestamp)
             else:
                 if include_missing_data:
                     ret.add_empty_world_qsr_state(timestamp)
         return ret
 
-    def compute_qsr(self, objs):
+    def __compute_qsr(self, objs):
         if np.isnan(objs[0].z) or np.isnan(objs[1].z):
             d = np.sqrt(np.square(objs[0].x - objs[1].x) + np.square(objs[0].y - objs[1].y))
         else:
