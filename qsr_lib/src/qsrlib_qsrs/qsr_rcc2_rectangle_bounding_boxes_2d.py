@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Computes symmetrical RCC3 relations: 'dc':disconnected, 'po':partial overlap, 'o': occluded/part of
+"""Computes RCC2 relations: 'dc':disconnected, 'c': c
 
 :Author: Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>
 :Organization: University of Leeds
@@ -17,12 +17,12 @@ from qsrlib_qsrs.qsr_abstractclass import QSR_Abstractclass
 from qsrlib_io.world_qsr_trace import *
 
 
-class QSR_RCC3_Rectangle_Bounding_Boxes_2D(QSR_Abstractclass):
+class QSR_RCC2_Rectangle_Bounding_Boxes_2D(QSR_Abstractclass):
     """Make default QSRs and provide an example for others"""
     def __init__(self):
-        self.qsr_type = "rcc3_rectangle_bounding_boxes_2d"  # must be the same that goes in the QSR_Lib.__const_qsrs_available
-        self.qsr_keys = "rcc3"
-        self.all_possible_relations = ["dc", "po", "o"]
+        self.qsr_type = "rcc2_rectangle_bounding_boxes_2d"  # must be the same that goes in the QSR_Lib.__const_qsrs_available
+        self.qsr_keys = "rcc2"
+        self.all_possible_relations = ["dc", "c"]
 
     def custom_set_from_ini(self, parser):
         pass
@@ -95,83 +95,10 @@ class QSR_RCC3_Rectangle_Bounding_Boxes_2D(QSR_Abstractclass):
         return ret
 
     def __compute_qsr(self, bb1, bb2):
-        """Return symmetrical RCC3 relation
+        """Return RCC2 relation
 
         :param bb1: diagonal points coordinates of first bounding box (x1, y1, x2, y2)
         :param bb2: diagonal points coordinates of second bounding box (x1, y1, x2, y2)
-        :return: an RCC3 relation from the following: 'dc':disconnected, 'po':partial overlap, 'o': occluded/part of
+        :return: an RCC2 relation from the following: 'dc':disconnected, 'c': connected
         """
-
-        bboxes_intercept_v, rabx, raxPrbx, raby, rayPrby = self.__bboxes_intercept(bb1, bb2)
-        if bboxes_intercept_v:
-            if rabx > 0.0 or raby > 0:
-                return "po"
-            else:
-                occluded_points = self.__count_occluded_points(bb1, bb2)
-                if occluded_points >= 4:
-                    return "o"
-                else:
-                    return "po"
-        else:
-            return "dc"
-
-
-    def __count_occluded_points(self, bb1, bb2):
-        occluded_points = 0
-        bb1_4corners = ((bb1[0], bb1[1]),
-                        (bb1[2], bb1[1]),
-                        (bb1[2], bb1[3]),
-                        (bb1[0], bb1[3]))
-        bb2_4corners = ((bb2[0], bb2[1]),
-                        (bb2[2], bb2[1]),
-                        (bb2[2], bb2[3]),
-                        (bb2[0], bb2[3]))
-
-        for p in bb1_4corners:
-            if self.__is_point_in_rectangle(p, bb2):
-                occluded_points += 1
-        for p in bb2_4corners:
-            if self.__is_point_in_rectangle(p, bb1):
-                occluded_points += 1
-
-        return occluded_points
-
-
-    def __is_point_in_rectangle(self, p, r, d=0.):
-        return p[0] >= r[0]-d and p[0] <= r[2]+d and p[1] >= r[0]-d and p[1] <= r[3]+d
-
-
-    def __bboxes_intercept(self, bb1, bb2):
-        """
-        https://rbrundritt.wordpress.com/2009/10/03/determining-if-two-bounding-boxes-overlap/
-
-        :param bb1: diagonal points coordinates of first bounding box (x1, y1, x2, y2)
-        :param bb2: diagonal points coordinates of second bounding box (x1, y1, x2, y2)
-        :return:
-        """
-
-        # First bounding box, top left corner, bottom right corner
-        ATLx = bb1[0]
-        ATLy = bb1[3]
-        ABRx = bb1[2]
-        ABRy = bb1[1]
-
-        # Second bounding box, top left corner, bottom right corner
-        BTLx = bb2[0]
-        BTLy = bb2[3]
-        BBRx = bb2[2]
-        BBRy = bb2[1]
-
-        rabx = abs(ATLx + ABRx - BTLx - BBRx)
-        raby = abs(ATLy + ABRy - BTLy - BBRy)
-
-        # rAx + rBx
-        raxPrbx = ABRx - ATLx + BBRx - BTLx
-
-        # rAy + rBy
-        rayPrby = ATLy - ABRy + BTLy - BBRy
-
-        if(rabx <= raxPrbx) and (raby <= rayPrby):
-            return True, rabx, raxPrbx, raby, rayPrby
-        else:
-            return False, rabx, raxPrbx, raby, rayPrby
+        return "dc" if (bb1[0] > bb2[2]) or (bb1[2] < bb2[0]) or (bb1[1] > bb2[3]) or (bb1[3] < bb2[1]) else "c"
