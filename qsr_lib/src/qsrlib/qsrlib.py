@@ -22,6 +22,8 @@ from qsrlib_qsrs.qsr_qtc_b_simplified import QSR_QTC_B_Simplified
 from qsrlib_qsrs.qsr_qtc_c_simplified import QSR_QTC_C_Simplified
 from qsrlib_qsrs.qsr_qtc_bc_simplified import QSR_QTC_BC_Simplified
 from qsrlib_qsrs.qsr_arg_relations_distance import QSR_Arg_Relations_Distance
+from qsrlib_qsrs.qsr_moving_or_stationary import QSR_Moving_or_Stationary
+
 
 class QSRlib_Response_Message(object):
     def __init__(self, qsrs, timestamp_request_made, timestamp_request_received, timestamp_qsrs_computed):
@@ -33,7 +35,7 @@ class QSRlib_Response_Message(object):
 class QSRlib_Request_Message(object):
     def __init__(self, which_qsr="", input_data=None, qsrs_for=[], timestamp_request_made=None,
                  start=0, finish=-1, objects_names=[], include_missing_data=True, qsr_relations_and_values={},
-                 future=False, ini=None, dynamic_args=None):
+                 future=False, config=None, dynamic_args=None):
         self.future = future
         self.which_qsr = which_qsr
         self.input_data = None
@@ -42,7 +44,7 @@ class QSRlib_Request_Message(object):
         self.timestamp_request_made = datetime.now() if timestamp_request_made is None else timestamp_request_made
         self.include_missing_data = include_missing_data
         self.qsr_relations_and_values = qsr_relations_and_values # should be more dynamic
-        self.ini = ini
+        self.config = config
         self.dynamic_args = dynamic_args
 
     def make(self, which_qsr, input_data, qsrs_for=[], timestamp_request_made=None, future=None, ini=None,
@@ -91,7 +93,8 @@ class QSRlib(object):
                                        "qtc_b_simplified": QSR_QTC_B_Simplified,
                                        "qtc_c_simplified": QSR_QTC_C_Simplified,
                                        "qtc_bc_simplified": QSR_QTC_BC_Simplified,
-                                       "arg_relations_distance": QSR_Arg_Relations_Distance}
+                                       "arg_relations_distance": QSR_Arg_Relations_Distance,
+                                       "moving_or_stationary": QSR_Moving_or_Stationary}
         self.__qsrs_active = {}
         self.__set_qsrs_active(qsrs_active)
         if help:
@@ -150,7 +153,7 @@ class QSRlib(object):
                                                                                      qsrs_for=self.request_message.qsrs_for,
                                                                                      qsr_relations_and_values=self.request_message.qsr_relations_and_values,
                                                                                      future=self.request_message.future,
-                                                                                     ini=self.request_message.ini,
+                                                                                     config=self.request_message.config,
                                                                                      dynamic_args=self.request_message.dynamic_args)
         except KeyError:
             print("ERROR (QSR_Lib.request_qsrs): it seems that the QSR you requested (" + self.request_message.which_qsr + ") is not implemented yet or has not been activated")
