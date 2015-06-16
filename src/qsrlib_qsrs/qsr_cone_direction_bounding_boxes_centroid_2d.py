@@ -19,9 +19,18 @@ class QSR_Cone_Direction_Bounding_Boxes_Centroid_2D(QSR_Abstractclass):
     """Make default QSRs and provide an example for others"""
     def __init__(self):
         self.qsr_type = "cone_direction_bounding_boxes_centroid_2d"  # must be the same that goes in the QSR_Lib.__const_qsrs_available
-        self.all_possible_relations = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "same", "unknown"]
+            # 's'      south
+            # 'sw'     south-west
+            # 'w'      west
+            # 'nw'     north-west
+            # 'n'      north
+            # 'ne'     north-east
+            # 'e'      east
+            # 'se'     south-east
+        self.all_possible_relations = ["n", "ne", "e", "se", "s", "sw", "w", "nw", "eq"]
+        self.qsr_keys = "coneDir"
 
-    def custom_set_from_ini(self, parser):
+    def custom_set_from_config_file(self, document):
         pass
 
     def custom_help(self):
@@ -72,7 +81,8 @@ class QSR_Cone_Direction_Bounding_Boxes_Centroid_2D(QSR_Abstractclass):
                     between = str(p[0]) + "," + str(p[1])
                     bb1 = world_state.objects[p[0]].return_bounding_box_2d()
                     bb2 = world_state.objects[p[1]].return_bounding_box_2d()
-                    qsr = QSR(timestamp=timestamp, between=between, qsr=self.__compute_qsr(bb1, bb2))
+                    qsr = QSR(timestamp=timestamp, between=between,
+                              qsr=self.handle_future(kwargs["future"], self.__compute_qsr(bb1, bb2), self.qsr_keys))
                     ret.add_qsr(qsr, timestamp)
             else:
                 if include_missing_data:
@@ -95,7 +105,7 @@ class QSR_Cone_Direction_Bounding_Boxes_Centroid_2D(QSR_Abstractclass):
             :param bb1: diagonal points coordinates of first bounding box (x1, y1, x2, y2)
             :param bb2: diagonal points coordinates of second bounding box (x1, y1, x2, y2)
             :return: a string containing a cone-shaped direction relation
-             directions: 'north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'same', 'unknown'
+             directions: 'n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw', 'eq'
         """
         
         # Finds the differnece between the centres of each object
@@ -103,7 +113,7 @@ class QSR_Cone_Direction_Bounding_Boxes_Centroid_2D(QSR_Abstractclass):
         dy = ((bb2[1]+bb2[3])/2.0) - ((bb1[1]+bb1[3])/2.0)
 
         if dx==0 and dy==0:
-            return 'same'
+            return 'eq'
 
         # Calculate the angle of the line between the two objects (in degrees)
         angle = (math.atan2(dx,dy) * (180/math.pi))+22.5
@@ -118,12 +128,20 @@ class QSR_Cone_Direction_Bounding_Boxes_Centroid_2D(QSR_Abstractclass):
     # Switch Statement convert number into region label
     def directionSwitch(self,x):
         return {
-            0 : 'south',
-            1 : 'south-west',
-            2 : 'west',
-            3 : 'north-west',
-            4 : 'north',
-            5 : 'north-east',
-            6 : 'east',
-            7 : 'south-east',
-        }.get((x), 'unknown')
+            #    south
+            0 : 's',
+            #    south-west
+            1 : 'sw',
+            #    west
+            2 : 'w',
+            #    north-west
+            3 : 'nw',
+            #    north
+            4 : 'n',
+            #    north-east
+            5 : 'ne',
+            #    east
+            6 : 'e',
+            #    south-east
+            7 : 'se',
+        }.get(x)
