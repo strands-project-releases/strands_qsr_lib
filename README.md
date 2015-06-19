@@ -1,3 +1,26 @@
+## strands_qsr_lib (indigo) - 0.1.1-0
+
+The packages in the `strands_qsr_lib` repository were released into the `indigo` distro by running `/usr/bin/bloom-release --non-interactive -t indigo -r indigo strands_qsr_lib` on `Fri, 19 Jun 2015 14:29:09 -0000`
+
+These packages were released:
+- `qsr_lib`
+- `strands_qsr_lib`
+
+Version of package(s) in repository `strands_qsr_lib`:
+- upstream repository: https://github.com/strands-project/strands_qsr_lib.git
+- release repository: https://github.com/strands-project-releases/strands_qsr_lib.git
+- rosdistro version: `0.1.0-0`
+- old version: `0.1.0-0`
+- new version: `0.1.1-0`
+
+Versions of tools used:
+- bloom version: `0.5.12`
+- catkin_pkg version: `0.2.4`
+- rosdep version: `0.10.30`
+- rosdistro version: `0.3.5`
+- vcstools version: `0.1.35`
+
+
 ## strands_qsr_lib (indigo) - 0.1.0-0
 
 The packages in the `strands_qsr_lib` repository were released into the `indigo` distro by running `/usr/bin/bloom-release --non-interactive -t indigo -r indigo strands_qsr_lib` on `Tue, 16 Jun 2015 09:23:30 -0000`
