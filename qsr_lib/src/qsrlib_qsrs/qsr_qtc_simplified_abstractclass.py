@@ -20,9 +20,11 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Abstractclass):
     """Abstract class for the QSR makers"""
     __metaclass__ = ABCMeta
 
+    __qsr_keys = "qtcs"
+
     def __init__(self):
         self.qtc_type = ""
-        self.qsr_keys = "qtcs"
+        self.qsr_keys = ""
 
     def custom_set_from_config_file(self, document):
         pass
@@ -349,6 +351,34 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Abstractclass):
                 error_found = True
         return qsrs_for, error_found
 
+    def _get_parameters(self, default, **kwargs):
+        try: # Depricated
+            if kwargs["dynamic_args"]:
+                suc = False
+                for k, v in kwargs["dynamic_args"].items():
+                    if k in default.keys():
+                        default[k] = v # This will always work so we have to check if name is default keys first
+                        suc = True
+                if suc:
+                    print("Warning: This feature is deprecated, use dynamic_args with the namespace '%s' on your request message instead" % self.qsr_keys)
+        except KeyError:
+            pass
+
+        try: # General case
+            if kwargs["dynamic_args"][self.__qsr_keys]:
+                for k, v in kwargs["dynamic_args"][self.__qsr_keys].items():
+                    default[k] = v
+        except KeyError:
+            pass
+
+        try: # Parameters for a specific variant
+            if kwargs["dynamic_args"][self.qsr_keys]:
+                for k, v in kwargs["dynamic_args"][self.qsr_keys].items():
+                    default[k] = v
+        except KeyError:
+            pass
+
+        return default
 
     def make(self, *args, **kwargs):
         """Make the QSRs
@@ -372,15 +402,11 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Abstractclass):
         parameters = {
             "quantisation_factor": 0.0,
             "validate": True,
-            "no_collapse": False
+            "no_collapse": False,
+            "distance_threshold": 1.22
         }
 
-        try:
-            if kwargs["dynamic_args"]:
-                for k, v in kwargs["dynamic_args"].items():
-                    parameters[k] = v
-        except:
-            print "No parameters found, will use default parameters: ", parameters
+        parameters = self._get_parameters(parameters, **kwargs)
 
         if qsrs_for:
             for p in qsrs_for:
@@ -445,6 +471,9 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Abstractclass):
                     )
                     ret.add_qsr(qsr, idx+1)
 
+        if no_collapse and not validate:
+            self._rectify_timestamps(input_data, ret)
+
         return ret
 
     def _return_all_possible_combinations(self, objects_names):
@@ -457,6 +486,9 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Abstractclass):
                     ret.append((i, j))
         return ret
 
+    def _rectify_timestamps(self, world_trace, world_qsr_trace):
+        for t, tqtc in zip(world_trace.get_sorted_timestamps()[1:], world_qsr_trace.get_sorted_timestamps()):
+            world_qsr_trace.trace[t] = world_qsr_trace.trace.pop(tqtc)
 
     @abstractmethod
     def qtc_to_output_format(self, qtc, future=False):

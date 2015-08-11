@@ -10,6 +10,7 @@
 """
 
 from __future__ import print_function, division
+from numpy import isnan
 import copy
 
 class Object_State(object):
@@ -23,20 +24,31 @@ class Object_State(object):
         self.x = x
         self.y = y
         self.z = z
+        # self.length = float('nan')  # y size
+        # self.width = float('nan')  # x size
+        # self.height = float('nan')  # z size
+        self.set_length_width_height(length=length, width=width, height=height)
         self.roll = roll
         self.pitch = pitch
         self.yaw = yaw
-        self.length = length # y size
-        self.width = width # x size
-        self.height = height # z size
+
         self.args = args
         self.kwargs = kwargs
 
-    def return_bounding_box_2d(self):
-        if self.width <= 0 or self.length <= 0:
-            print("ERROR: can't compute bounding box, width or height has no positive value")
-            return []
-        return [self.x-self.width/2, self.y-self.length/2, self.x+self.width/2, self.y+self.length/2]
+    def set_length_width_height(self, length=float('nan'), width=float('nan'), height=float('nan')):
+        if length < 0 or width < 0 or height < 0:
+            raise ValueError("Object length, width and height cannot be negative; leave them to default values if unset")
+        else:
+            self.width = width  # x size
+            self.length = length  # y size
+            self.height = height  # z size
+
+    def return_bounding_box_2d(self, minimal_width=0, minimal_length=0):
+        if self.width < 0 or self.length < 0:
+            raise ValueError("Object width and length cannot be negative")
+        width = minimal_width if isnan(self.width) else self.width
+        length = minimal_length if isnan(self.length) else self.length
+        return [self.x-width/2, self.y-length/2, self.x+width/2, self.y+length/2]
 
 
 class World_State(object):
@@ -116,27 +128,37 @@ class World_Trace(object):
             print("ERROR: Timestamp not in trace")
             return False
 
-    def get_at_timestamp_range(self, start, finish):
+    def get_at_timestamp_range(self, start, finish, by_reference=True, inclusive=True):
+        """Returns a World_Trace object between start and finish timestamps.
+
+        :param start: Start timestamp.
+            :type start: timestamp format, hopefully
+        :param finish: Finish timestamp.
+        :param by_reference: Returned World_Trace contains links to original or is a deepcopy (default=True).
+            :type by_reference: bool
+        :param inclusive: Include or not the finish element (default=True).
+            :type inclusive: bool
+        :return: A subsampled between start and finish (including finish element by default) World_Trace.
+        :rtype: World_Trace
+        """
         timestamps = self.get_sorted_timestamps()
-        ret = World_Trace(last_updated=self.last_updated, timestamps=[], trace={})
         try:
             iStart = timestamps.index(start)
         except ValueError:
-            print("ERROR: start not found")
-            return False
+            raise ValueError("start not found")
+        if not finish:
+            finish = timestamps[-1]
         try:
             iFinish = timestamps.index(finish)
         except ValueError:
-            print("ERROR: finish not found")
-            return False
+            raise ValueError("finish not found")
         if iStart > iFinish:
-            print("ERROR: start after finish")
-            return False
-        ret.timestamps = timestamps[iStart:iFinish] + [timestamps[iFinish]]
-        for timestamp in ret.timestamps:
-            ret.trace[timestamp] = copy.deepcopy(self.trace[timestamp])
+            raise ValueError("start cannot be after finish")
+        timestamps = timestamps[iStart:iFinish] + [timestamps[iFinish]] if inclusive else timestamps[iStart:iFinish]
+        ret = World_Trace(last_updated=self.last_updated)
+        for timestamp in timestamps:
+            ret.trace[timestamp] = self.trace[timestamp] if by_reference else copy.deepcopy(self.trace[timestamp])
         return ret
-
 
     def get_for_objects(self, objects_names):
         ret = World_Trace(last_updated=self.last_updated,
