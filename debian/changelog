@@ -1,0 +1,74 @@
+ros-indigo-strands-qsr-lib (0.2.0-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Thu, 27 Aug 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.1.3-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Thu, 13 Aug 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.1.1-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Fri, 19 Jun 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.1.0-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Tue, 16 Jun 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.0.8-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Sun, 17 May 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.0.7-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Wed, 22 Apr 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.0.6-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Wed, 04 Mar 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.0.5-0trusty) trusty; urgency=high
+
+  * There was a tag with a higher version number. Adjusting numbers to release for necessary bug fixes in the ROS client.
+  * Contributors: Christian Dondrup
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Fri, 27 Feb 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.0.3-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Tue, 27 Jan 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.0.2-0trusty) trusty; urgency=high
+
+  * Created changelog
+  * Adding meta package for future extension.
+    Meta package will be added to strands-desktop and strands-robot for convenience.
+  * Contributors: Christian Dondrup
+  * Adding meta package for future extension.
+    Meta package will be added to strands-desktop and strands-robot for convenience.
+  * Contributors: Christian Dondrup
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Tue, 27 Jan 2015 00:00:00 -0000
+
+ros-indigo-strands-qsr-lib (0.0.1-0trusty) trusty; urgency=high
+
+
+
+ -- Yiannis Gatsoulis <y.gatsoulis@leeds.ac.uk>  Tue, 27 Jan 2015 00:00:00 -0000
+
+
