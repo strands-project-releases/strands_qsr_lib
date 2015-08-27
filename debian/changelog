@@ -1,0 +1,90 @@
+ros-indigo-qsr-prob-rep (0.2.0-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Thu, 27 Aug 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.1.3-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Thu, 13 Aug 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.1.2-0trusty) trusty; urgency=high
+
+  * Adding RCC3 as an easy example on how to add new QSRs to the prob rep lib.
+    Also, updating README.
+  * Removing rubbish from test file.
+  * Updated documentation to reflect name changes.
+  * Cleaning up cmake and package file, adding qsr_prob_rep to meta package
+  * Adding tests for creation, sampling and loglikelihood of all three qtc types.
+  * Finally enabling qtcbc and minor changes
+    * qtcbc now works using code from qtcb and qtcc and some custom functions overwriting the ones in qtc_hmm_abstractclass
+    * Removed some prints and fixed comments.
+  * Fixing a bug where the final state was always 82... d'oh
+  * Renaming package
+  * Contributors: Christian Dondrup
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Tue, 11 Aug 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.1.1-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Fri, 19 Jun 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.1.0-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Tue, 16 Jun 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.0.8-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Sun, 17 May 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.0.7-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Wed, 22 Apr 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.0.6-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Wed, 04 Mar 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.0.5-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Fri, 27 Feb 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.0.4-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Thu, 26 Feb 2015 00:00:00 -0000
+
+ros-indigo-qsr-prob-rep (0.0.3-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Tue, 27 Jan 2015 20:25:00 -0000
+
+ros-indigo-qsr-prob-rep (0.0.2-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Tue, 27 Jan 2015 16:55:00 -0000
+
+ros-indigo-qsr-prob-rep (0.0.1-0trusty) trusty; urgency=high
+
+
+
+ -- Christian Dondrup <cdondrup@lincoln.ac.uk>  Tue, 27 Jan 2015 14:04:00 -0000
+
+
