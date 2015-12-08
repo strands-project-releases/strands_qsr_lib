@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Jan 19 11:22:16 2015
-
-@author: cdondrup
-"""
 from abc import abstractmethod, ABCMeta
 from qsrlib_qsrs.qsr_dyadic_abstractclass import QSR_Dyadic_Abstractclass
 from qsrlib_io.world_qsr_trace import *
 from exceptions import Exception, AttributeError
 import numpy as np
 
+# todo /use/bin/env python not needed here.
 
 class QTCException(Exception):
+    """?"""
     pass
 
 
 class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
+    """QTCS abstract class.
+
+    """
+
     """
 
     print "where,\n" \
@@ -28,13 +29,29 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
     __metaclass__ = ABCMeta
 
     __global_unique_id = "qtcs"
+    """?"""
+
     __no_state__ = 9.
+    """?"""
+
+    _unique_id = ""
+    """str: Unique identifier name of the QSR."""
+
+    _all_possible_relations = ()
+    """tuple: All possible relations of the QSR."""
+
+    _dtype = "points"
+    """str: QTC specific type."""
 
     def __init__(self):
+        """Constructor."""
         super(QSR_QTC_Simplified_Abstractclass, self).__init__()
-        self._unique_id = ""
-        self.qtc_type = ""
 
+        # todo should be private abstractproperty
+        self.qtc_type = ""
+        """?"""
+
+        # todo commenting for following could go in the class docstring
         self.__qsr_params_defaults= {
             "quantisation_factor": 0.0,
             "validate": True,
@@ -43,12 +60,12 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         }
 
     def return_all_possible_state_combinations(self):
-        """Method that returns all possible state combinations for the qtc_type
-        defined for this calss instance.
+        """Return all possible state combinations for the qtc_type defined for this class instance.
 
-        :return:
-            - String representation as a list of possible tuples
-            - Integer representation as a list of lists of possible tuples
+        :return: All possible state combinations.
+        :rtype:
+                * String representation as a list of possible tuples, or,
+                * Integer representation as a list of lists of possible tuples
         """
         ret_str = []
         ret_int = []
@@ -84,11 +101,12 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         return [s.replace('-1','-').replace('1','+') for s in ret_str], ret_int
 
     def _validate_qtc_sequence(self, qtc):
-        """Removes illegal state transition by inserting necessary intermediate states
+        """Remove illegal state transition by inserting necessary intermediate states.
 
-        :param qtc: a numpy array of the qtc state chain. One qtc state per row
-
-        :return: The valid state chain as a numpy array
+        :param qtc: Array of QTCS state chain with one QTCS state per row.
+        :type qtc: numpy.array
+        :return: Valid state chain.
+        :rtype: numpy.array
         """
         if len(qtc.shape) == 1:
             return np.array(qtc)  # Only one state in chain.
@@ -116,9 +134,9 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
             for j1 in xrange(0, len(qtc[i,:])-1):
                 for j2 in xrange(j1+1, len(insert)):
                     if np.sum(np.abs(qtc[i-1,[j1,j2]])) == 1 \
-                    and np.sum(np.abs(insert[[j1,j2]])) == 1:
+                            and np.sum(np.abs(insert[[j1,j2]])) == 1:
                         if np.nanmax(np.abs(qtc[i-1,[j1,j2]] - insert[[j1,j2]])) > 0 \
-                        and np.sum(qtc[i-1,[j1,j2]] - insert[[j1,j2]]) != 1:
+                                and np.sum(qtc[i-1,[j1,j2]] - insert[[j1,j2]]) != 1:
                             insert[[j1,j2]] = 0
 
             #print insert
@@ -131,11 +149,12 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         return legal_qtc
 
     def _collapse_similar_states(self, qtc):
-        """Collapses similar adjacent QTC states.
+        """Collapse similar adjacent QTCS states.
 
-        :param qtc: a qtc state sequence
-
-        :return: the input sequence without similar adjacent states
+        :param qtc: QTCS state sequence.
+        :type qtc: ?
+        :return: Input sequence without similar adjacent states.
+        :rtype: ?
         """
         if len(qtc.shape) == 1:
             return qtc  # Only one state in chain.
@@ -150,13 +169,14 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         return qtc
 
     def _nan_equal(self, a, b):
-        """Uses assert equal to compare if two arrays containing nan values
-        are equal.
+        """Uses assert equal to compare if two arrays containing nan values are equal.
 
-        :param a: first array
-        :param b: second array
-
-        :return: True|False
+        :param a: First array.
+        :type a: ?
+        :param b: Second array.
+        :type b: ?
+        :return: `True` or `False`
+        :rtype: bool
         """
         try:
             np.testing.assert_equal(a,b)
@@ -165,16 +185,18 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         return True
 
     def _create_qtc_representation(self, pos_k, pos_l, quantisation_factor=0):
-        """Creating the QTCC representation for the given data. Uses the
-        double cross to determine to which side of the lines the points are
-        moving.
+        """Create the QTCCS representation for the given data.
 
-        :param pos_k: An array of positions for agent k, exactly 2 entries of x,y positions
-        :param pos_l: An array of positions for agent l, exactly 2 entries of x,y positions
-        :param quantisation_factor: The minimum distance the points have to diverge from either line to be regrded a non-0-state
+        Uses the double cross to determine to which side of the lines the points are moving.
 
-        :return: The QTCC 4-tuple (q1,q2,q4,q5) for the movement of the two agents: [k[0],l[0],k[1],l[1]]
-
+        :param pos_k: Array of positions for agent k, exactly 2 entries of x,y positions.
+        :type pos_k: ?
+        :param pos_l: Array of positions for agent l, exactly 2 entries of x,y positions
+        :type pos_l: ?
+        :param quantisation_factor: The minimum distance the points have to diverge from either line to be regarded a non-0-state.
+        :type quantisation_factor: float
+        :return: QTCCS 4-tuple (q1,q2,q4,q5) for the movement of the two agents: [k[0],l[0],k[1],l[1]].
+        :rtype: numpy.array
         """
         #print "######################################################"
         pos_k = np.array(pos_k).reshape(-1, 2)
@@ -222,16 +244,16 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
             self._test_constraint(
                 pos_l,
                 np.array([ # Needs to be turned around to determine correct side
-                    [trans_RL_l[1,0],trans_RL_l[1,1]],
-                    [trans_RL_l[0,0],trans_RL_l[0,1]]
-                ]),
+                           [trans_RL_l[1,0],trans_RL_l[1,1]],
+                           [trans_RL_l[0,0],trans_RL_l[0,1]]
+                           ]),
                 quantisation_factor=quantisation_factor),
             self._test_constraint(
                 pos_l,
                 np.array([ # Needs to be turned around to determine correct side
-                    [RL_ext[1,0],RL_ext[1,1]],
-                    [RL_ext[0,0],RL_ext[0,1]]
-                ]),
+                           [RL_ext[1,0],RL_ext[1,1]],
+                           [RL_ext[0,0],RL_ext[0,1]]
+                           ]),
                 quantisation_factor=quantisation_factor,
                 constraint="side")
         )
@@ -240,25 +262,30 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         return np.array([k[0],l[0],k[1],l[1]])
 
     def _translate(self, point, trans_vec):
-        """Translating points by trans_vec.
+        """Translate points by trans_vec.
 
-        :parma points: Can be [x,y] or list of lists [[x,y],[x,y]]
-        :param trans_vec: The translation vector given as [x, y]
-
-        :return: The translated points
+        :param point: Can be [x,y] or list of lists [[x,y],[x,y]].
+        :type point: list or list of lists
+        :param trans_vec: The translation vector given as [x, y].
+        :type trans_vec: ?
+        :return: Translated points.
+        :rtype: ?
         """
         point_array = np.array(point)
         point_array = point_array + np.array(trans_vec)
         return point_array
 
+    # todo `line` and `point` instead of LINE and POINT?
     def _orthogonal_line(self, point, line):
-        """Returns the line orthogonal to the line LINE and going through the
+        """Return the line orthogonal to the line LINE and going through the
         point given by POINT. Directed angle from LINE to PERP is pi/2.
 
-        :param point: The point the line should pass thorugh represented by [xp yp]
+        :param point: The point the line should pass thorugh represented by [xp yp].
+        :type point: ?
         :param line: The original to which the new one will be orthogonal given as [x0 y0 dx dy]
-
-        :return: the orthoginal line to *line* going through *point*
+        :type line: ?
+        :return: Orthogonal line to `line` going through `point`.
+        :rtype: ?
         """
         res = np.array(point)
         line = np.array(line)
@@ -273,25 +300,28 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         return res
 
     def _test_constraint(self, pos, line, quantisation_factor=0, constraint=""):
-        """Testing for distance and side constraint using the double cross. To
-        determine if a point moved, it uses a line (from the cross) and checks
+        """Test for distance and side constraint using the double cross.
+
+        To determine if a point moved, it uses a line (from the cross) and checks
         the side the point moved to (depending on the orientation of the line)
-        and how far away it moved. The latter is used for the quantisation_factor
+        and how far away it moved. The latter is used for the `quantisation_factor`
         and to create 0-states from noisy data.
+
         Example:
-            - QTCB: uses the orthogonal line going through the point to compute the distance constraint
-            - QTCC: uses the connecting line to determine the side constraint
+            * QTCBS: uses the orthogonal line going through the point to compute the distance constraint.
+            * QTCCS: uses the connecting line to determine the side constraint.
 
-        :param pos: The position of the agent, point in space
-        :param line: The line to use as reference for the movement
-        :param quantisation_factor=0: Minimum distance a point has to move to be considered a non-0-state. same unit of mesuarment in which the points are described
-        :param constraint="": Set to "side" if checking for the side constraint.
-        The result for the side has to be inverted.
-
-        :return: The qtc symbol for this movement
-
+        :param pos: Position of the agent, point in space.
+        :type pos: ?
+        :param line: Line to use as reference for the movement.
+        :type line: ?
+        :param quantisation_factor: Minimum distance a point has to move to be considered a non-0-state. Same unit of measurement as the described points.
+        :type quantisation_factor: float
+        :param constraint: Set to "side" if checking for the side constraint. The result for the side has to be inverted.
+        :type constraint: str
+        :return: QTCS symbol for this movement.
+        :rtype: ?
         """
-
         x0 = pos[-1,0]
         y0 = pos[-1,1]
         x1 = line[0,0]
@@ -318,30 +348,44 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         # Side constraints need to be inverted to give the correct qtc state
         return res*-1 if constraint == "side" else res
 
-    # todo maybe we can include this somewhere else... have a feeling that I was thinking of deprecating this or refactoring to a more meaningful name
-    def custom_checks(self, input_data):
-        """Write your own custom checks on top of the default ones
+    def _custom_checks_world_trace(self, input_data, qsr_params):
+        """Custom check of input data.
 
-
-        :return: error code, error message (integer, string), use 10 and above for error code as 1-9 are reserved by system
+        :param input_data: Input data.
+        :type input_data: :class:`World_Trace <qsrlib_io.world_trace.World_Trace>`
+        :param qsr_params: QSR specific parameters passed in `dynamic_args`.
+        :type qsr_params: dict
+        :return: False for no problems.
+        :rtype: bool
+        :raises:
+            * ValueError: "Data for at least two separate timesteps has to be provided."
+            * KeyError: "Only one object defined for timestep %f. Two objects have to be present at any given step."
+            * ValueError: "Coordinates x: %f, y: %f are not defined correctly for timestep %f."
         """
-        # return 0, ""  # bypass
         timestamps = input_data.get_sorted_timestamps()
         if len(timestamps) < 2:
-            return 50, "Data for at least two separate timesteps has to be provided."
-        objects_names = sorted(input_data.trace[timestamps[0]].objects.keys())
-        for t in timestamps:
-            for o in objects_names:
-                try :
-                    input_data.trace[t].objects[o]
-                except KeyError:
-                        return 51, "Only one object defined for timestep %f. Two objects have to be present at any given step." % t
-                if np.isnan(input_data.trace[t].objects[o].x) \
-                    or np.isnan(input_data.trace[t].objects[o].y):
-                        return 52, "Coordinates x: %f, y: %f are not defined correctly for timestep %f." % (x, y, t)
-        return 0, ""
+            raise ValueError("Data for at least two separate timesteps has to be provided.")
+        if self._unique_id != "qtcbs" or qsr_params["validate"] or not qsr_params["no_collapse"]:
+            objects_names = sorted(input_data.trace[timestamps[0]].objects.keys())
+            for t in timestamps:
+                for o in objects_names:
+                    try:
+                        input_data.trace[t].objects[o]
+                    except KeyError:
+                        raise KeyError("Only one object defined for timestep %f. Two objects have to be present at any given step." % t)
+                    if np.isnan(input_data.trace[t].objects[o].x) or np.isnan(input_data.trace[t].objects[o].y):
+                        raise ValueError("Coordinates x: %f, y: %f are not defined correctly for timestep %f." % (input_data.trace[t].objects[o].x, input_data.trace[t].objects[o].y, t))
+        return False
 
     def _process_qsr_parameters_from_request_parameters(self, req_params, **kwargs):
+        """Get the QSR specific parameters from the request parameters.
+
+        :param req_params: Request parameters.
+        :type req_params: dict
+        :param kwargs: kwargs arguments.
+        :return: QSR specific parameters.
+        :rtype: dict
+        """
         qsr_params = self.__qsr_params_defaults.copy()
 
         try: # global namespace
@@ -369,12 +413,26 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
             raise TypeError("'no_collapse' and 'validate' have to be boolean values.")
 
         for param in qsr_params:
-            if param not in self.__qsr_params_defaults and param not in self._allowed_parameters:
+            if param not in self.__qsr_params_defaults and param not in self._common_dynamic_args:
                 raise KeyError("%s is an unknown parameter" % str(param))
 
         return qsr_params
 
     def make_world_qsr_trace(self, world_trace, timestamps, qsr_params, req_params, **kwargs):
+        """Compute the world QSR trace from the arguments.
+
+        :param world_trace: Input data.
+        :type world_trace: :class:`World_Trace <qsrlib_io.world_trace.World_Trace>`
+        :param timestamps: List of sorted timestamps of `world_trace`.
+        :type timestamps: list
+        :param qsr_params: QSR specific parameters passed in `dynamic_args`.
+        :type qsr_params: dict
+        :param req_params: Request parameters.
+        :type req_params: dict
+        :param kwargs: kwargs arguments.
+        :return: Computed world QSR trace.
+        :rtype: :class:`World_QSR_Trace <qsrlib_io.world_qsr_trace.World_QSR_Trace>`
+        """
         ret = World_QSR_Trace(qsr_type=self._unique_id)
         qtc_sequence = {}
         for t, tp in zip(timestamps[1:], timestamps):
@@ -427,13 +485,12 @@ class QSR_QTC_Simplified_Abstractclass(QSR_Dyadic_Abstractclass):
         if qsr_params["no_collapse"] and not qsr_params["validate"]:
             return World_QSR_Trace(
                 qsr_type=world_qsr_trace.qsr_type,
-                last_updated=world_qsr_trace.last_updated,
                 trace={t: world_qsr_trace.trace[tqtc]
-                    for t, tqtc in zip(
-                        world_trace.get_sorted_timestamps()[1:],
-                        world_qsr_trace.get_sorted_timestamps()
-                    )
-                }
+                       for t, tqtc in zip(
+                    world_trace.get_sorted_timestamps()[1:],
+                    world_qsr_trace.get_sorted_timestamps()
+                )
+                       }
             )
         else:
             return world_qsr_trace
