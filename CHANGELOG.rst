@@ -2,6 +2,11 @@
 Changelog for package qsr_prob_rep
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.1 (2015-12-08)
+------------------
+* Waiting for services to become available
+* Contributors: Christian Dondrup
+
 0.2.0 (2015-08-27)
 ------------------
 
