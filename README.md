@@ -1,3 +1,29 @@
+## strands_qsr_lib (kinetic) - 0.4.0-0
+
+The packages in the `strands_qsr_lib` repository were released into the `kinetic` distro by running `/usr/local/bin/bloom-release -n -t kinetic -r kinetic strands_qsr_lib` on `Fri, 01 Sep 2017 16:23:03 -0000`
+
+These packages were released:
+- `qsr_lib`
+- `qsr_prob_rep`
+- `strands_qsr_lib`
+
+Version of package(s) in repository `strands_qsr_lib`:
+
+- upstream repository: https://github.com/strands-project/strands_qsr_lib.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `0.4.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.5.26`
+- catkin_pkg version: `0.3.6`
+- rosdep version: `0.11.8`
+- rosdistro version: `0.6.2`
+- vcstools version: `0.1.39`
+
+
 ## strands_qsr_lib (indigo) - 0.3.0-0
 
 The packages in the `strands_qsr_lib` repository were released into the `indigo` distro by running `/usr/bin/bloom-release --non-interactive -t indigo -r indigo strands_qsr_lib` on `Wed, 20 Jan 2016 15:04:18 -0000`
