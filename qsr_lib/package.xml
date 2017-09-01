@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <package>
   <name>qsr_lib</name>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
   <description>The qsr_lib package</description>
 
   <maintainer email="y.gatsoulis@leeds.ac.uk">Yiannis Gatsoulis</maintainer>
-  <maintainer email="cdondrup@lincoln.ac.uk">Christian Dondrup</maintainer>
+  <maintainer email="marc@hanheide.net">Marc Hanheide</maintainer>
 
   <license>MIT</license>
 
