@@ -1,0 +1,12 @@
+Source: ros-kinetic-qsr-prob-rep
+Section: misc
+Priority: extra
+Maintainer: Marc Hanheide <marc@hanheide.net>
+Build-Depends: debhelper (>= 9.0.0), python-pybayes, ros-kinetic-catkin, ros-kinetic-message-generation, ros-kinetic-roslib, ros-kinetic-rospy, ros-kinetic-rostest, ros-kinetic-rosunit, ros-kinetic-std-msgs, ros-kinetic-std-srvs
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-kinetic-qsr-prob-rep
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libghmm-ne, python-pybayes, ros-kinetic-message-runtime, ros-kinetic-roslib, ros-kinetic-rospy, ros-kinetic-rostest, ros-kinetic-std-msgs, ros-kinetic-std-srvs
+Description: The qsr_prob_rep package
